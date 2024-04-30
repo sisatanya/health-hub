@@ -37,13 +37,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // For the user's first two failed login attempts, they will be prompted an
             // 'Invalid username or password.' message.
             if (attempt < MAX_LOGIN_ATTEMPTS) {
-                console.log("User", username, "failed to login")
                 return res.status(401).send({ message: 'Invalid username or password.' });
             } else if (attempt == MAX_LOGIN_ATTEMPTS) {
                 // At the user's third attempt, their username will be added in the blockedUser cookie,
                 blockedUserList.push(username);
                 const updatedBlockedUser = blockedUserList.join(', ');
-                console.log("blockedUser list: ", blockedUserList)
                 res.setHeader('Set-Cookie', cookie.serialize('blockedUser', updatedBlockedUser, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
@@ -51,7 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     maxAge: BLOCK_DURATION_SECONDS, // 30 minutes
                     path: '/',
                 }));
-                console.log("User", username, "blocked to login")
                 // and will be prompted an 'Invalid username or password.' message.
                 return res.status(401).send({ message: 'Invalid username or password.' });
             } else if (attempt > MAX_LOGIN_ATTEMPTS) {
@@ -82,7 +79,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).send({ message: 'Login successful.' });   
 
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }

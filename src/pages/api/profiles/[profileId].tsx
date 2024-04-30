@@ -53,7 +53,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 // and writes it back to the file.
                 fs.writeFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", newDataFile, (err: any) => {
                     if (err) {
-                        console.error(err);
                         res.status(405).end();
                         resolve();
                     } else {

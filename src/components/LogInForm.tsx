@@ -61,8 +61,6 @@ const LogInForm = () => {
                         values.attempt += 1; 
                     // Fix this - three failed attempts from different users blocks the last user that failed attempt to login
                         // we add 1 to the attempt value which is sent to the login API and is used to track login attempts.
-                        console.log('Attempt ', values.attempt);
-                        console.log('Invalid username or password.');
                         // The user is prompted and 'Invalid username or password.' message.
                         Swal.fire(
                             'Try again',
@@ -74,7 +72,6 @@ const LogInForm = () => {
                         values.attempt = 0;
                         // the attempt value is set back to 0 since the username of the user is already in the blockedUser cookie
                         // and this will allow to track the failed login of another user.
-                        console.log('User is blocked due to too many failed login attempts.');
                         // The user is prompted and 'User is blocked due to too many failed login attempts.' message.
                         Swal.fire(
                             'Try again later',
@@ -84,7 +81,7 @@ const LogInForm = () => {
                     }
                 });
         } catch (error) {
-            console.error(error);
+            
         }
 
     }

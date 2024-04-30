@@ -16,7 +16,6 @@ function sendProfiles(res: NextApiResponse) {
     const profiles = readJSONFile(filePath);
     res.status(200).json(profiles);
   } catch (error) {
-    console.error('Error reading JSON file:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
@@ -25,7 +24,6 @@ function sendProfiles(res: NextApiResponse) {
 function watchProfiles(res: NextApiResponse) {
   fs.watch(filePath, (event, filename) => {
     // Log the event for debugging purposes
-    console.log(`${filename} has been ${event}`);
 
     // Reload the profiles when the file is modified
     sendProfiles(res);

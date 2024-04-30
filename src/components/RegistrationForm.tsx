@@ -52,13 +52,11 @@ const RegistrationForm = () => {
                         router.push('/login');
                     }
                 });
-            console.log(values);
         } catch (error) {
             let errorMessage = "Failed to do something exceptional";
             if (error instanceof Error) {
                 errorMessage = error.message;
             }
-            console.log(errorMessage);
         }
         formik.resetForm();
     }

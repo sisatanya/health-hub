@@ -21,7 +21,6 @@ function Logout() {
         axios.post('/api/logout')
             .then(response => {
                 if (response.status === 200) {
-                    console.log('You are logged out.')
                     // and prompts the user a 'Logout successful' message.
                     Swal.fire(
                         'Goodbye',
@@ -31,7 +30,7 @@ function Logout() {
                     // The useris then redirected to the login page.
                     router.push('/login')
                 } else {
-                    console.error('Failed to log out')
+                    
                 }
             })
 
