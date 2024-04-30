@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useUser } from '../hooks/useUser'
 import { Grid, Container, Box, Typography } from '@mui/material'
 const Profiles = dynamic(() => import('../components/Profiles'))
-const Appointment = dynamic(() => import('../components/Appointment'))
+const AppointmentForm = dynamic(() => import('../components/AppointmentForm'))
 const Logout = dynamic(() => import('../components/LogOut'))
 // Dynamically importing the Appointment component
 
