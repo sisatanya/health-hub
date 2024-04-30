@@ -397,7 +397,7 @@ export async function getStaticProps(context: any) {
   const { params } = context;
 
   const fs = require('fs');
-  const profilesData = fs.readFileSync("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/profiles.json", 'utf8');
+  const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
   // Reading the profile data from a JSON file.. and 
   const data = JSON.parse(profilesData);
   // finding the profile that matches the provided `profileId`.
@@ -414,7 +414,7 @@ export async function getStaticProps(context: any) {
 export async function getStaticPaths() {
   // `getStaticPaths` to generate the static paths for the dynamic routes.
   const fs = require('fs');
-  const profilesData = fs.readFileSync("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/profiles.json", 'utf8');
+  const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
   // Reading the profile data from a JSON file.. and 
   const data = JSON.parse(profilesData);
 

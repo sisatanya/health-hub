@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return new Promise<void>((resolve, reject) => {
         if (req.method === 'GET') {
             // If the request method is GET, it reads the JSON file, 
-            fs.readFile("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
+            fs.readFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
                 if (err) {
                     throw err;
                 }
@@ -35,7 +35,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             })
         } else if (req.method === 'POST') {
             // If the request method is POST, it reads the JSON file, 
-            fs.readFile("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
+            fs.readFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
                 if (err) {
                     throw err;
                 }
@@ -46,7 +46,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 // converts the updated data back to JSON format, 
                 const newDataFile = JSON.stringify(userData, null, 2);
                 // and writes it back to the file.
-                fs.writeFile("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/profiles.json", newDataFile, (err: any) => {
+                fs.writeFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", newDataFile, (err: any) => {
                     if (err) {
                         console.error(err);
                         res.status(405).end();

@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { username, password, attempt } = req.body
   
     // Accessing the JSON file containing the users.
-    const profiles = require("D:/OneDrive - palawanpawnshop.com/login-form-etc/src/data/admins.json");
+    const profiles = require("D:/SISACHU/projects/login-form-etc/src/data/admins.json");
     // Finding the matching username and password the user inputted
     const user = profiles.find((user: { username: any; password: any; }) => user.username === username && user.password === password);
     
