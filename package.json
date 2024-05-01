@@ -46,6 +46,7 @@
     "yup": "^1.1.1"
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.3"
+    "@types/js-cookie": "^3.0.3",
+    "json": "^11.0.0"
   }
 }
