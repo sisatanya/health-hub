@@ -4,6 +4,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import cookie from 'cookie'
+import fs from 'fs'
+import path from 'path'
 
 const MAX_LOGIN_ATTEMPTS = 2
 const BLOCK_DURATION_SECONDS = 1800 // 30 minutes
@@ -14,7 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { username, password, attempt } = req.body
   
     // Accessing the JSON file containing the users.
-    const profiles = require("D:/SISACHU/projects/login-form-etc/src/data/admins.json");
+    //const profiles = require("D:/SISACHU/projects/login-form-etc/src/data/admins.json");
+    const profilesPath = path.join(process.cwd(), 'src/data/admins.json');
+    const profilesData = fs.readFileSync(profilesPath, 'utf8');
+    const profiles = JSON.parse(profilesData);
     // Finding the matching username and password the user inputted
     const user = profiles.find((user: { username: any; password: any; }) => user.username === username && user.password === password);
     
