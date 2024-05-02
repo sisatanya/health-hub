@@ -4,7 +4,6 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import cookie from 'cookie'
-import admins from "../../data/admins.json";
 
 const MAX_LOGIN_ATTEMPTS = 2
 const BLOCK_DURATION_SECONDS = 1800 // 30 minutes
