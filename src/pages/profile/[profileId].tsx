@@ -13,6 +13,8 @@ import { useState } from 'react'
 const Profiles = dynamic(() => import('../../components/Profiles'))
 const AppointmentForm = dynamic(() => import('../../components/AppointmentForm'))
 const Logout = dynamic(() => import('../../components/LogOut'))
+
+import profilesData from '../../data/profiles.json'
 // The Profiles and Logout components are dynamically imported
 // which means they will be loaded when they are required instead
 // of loading them all at once the page loads.
@@ -396,12 +398,12 @@ export async function getStaticProps(context: any) {
   // `getStaticProps` to fetch the user profile data based on the dynamic `profileId` parameter.
   const { params } = context;
 
-  const fs = require('fs');
-  const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
-  // Reading the profile data from a JSON file.. and 
-  const data = JSON.parse(profilesData);
+  // const fs = require('fs');
+  // const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
+  // // Reading the profile data from a JSON file.. and 
+  //const data = JSON.parse(profilesData);
   // finding the profile that matches the provided `profileId`.
-  const profile = data.find((profile: { username: string | string[] | undefined; }) => profile.username === params.profileId);  
+  const profile = profilesData.find((profile: { username: string | string[] | undefined; }) => profile.username === params.profileId);  
 
   return {
     // The matching profile data is then passed as userData to the App component.
@@ -413,13 +415,13 @@ export async function getStaticProps(context: any) {
 
 export async function getStaticPaths() {
   // `getStaticPaths` to generate the static paths for the dynamic routes.
-  const fs = require('fs');
-  const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
-  // Reading the profile data from a JSON file.. and 
-  const data = JSON.parse(profilesData);
+  // const fs = require('fs');
+  // const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
+  // // Reading the profile data from a JSON file.. and 
+  // const data = JSON.parse(profilesData);
 
   // creates an array of paths, where each path corresponds to a specific profile by using the username
-  const paths = data.map((userData: { username: any; }) => {
+  const paths = profilesData.map((userData: { username: any; }) => {
     return {
       params: { profileId: `${userData.username}`}
     }

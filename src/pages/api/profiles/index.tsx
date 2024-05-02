@@ -2,59 +2,46 @@
  * profiles/index is an API endpoint for retrieving and creating user profiles.
 */
 
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next';
+import path from 'path';
+import { promises as fs } from 'fs';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    // Retrieving user profile fields from the request's body.
-    const { username, password, confirmPassword, firstName, middleName, lastName, email, mobileNumber } = req.body
-    const newProfile = {
-        username,
-        password,
-        confirmPassword,
-        firstName,
-        middleName,
-        lastName,
-        email,
-        mobileNumber
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Retrieving `profileId` from the request's query parameters.
+  const { profileId } = req.query;
+  // Retrieving user profile fields from the request's body.
+  const { id, username, password, confirmPassword, firstName, middleName, lastName, email, mobileNumber } = req.body;
+  const newProfile = {
+    id,
+    username,
+    password,
+    confirmPassword,
+    firstName,
+    middleName,
+    lastName,
+    email,
+    mobileNumber,
+  };
+
+  try {
+    if (req.method === 'GET') {
+      // Import the JSON file
+      const filePath = path.join(process.cwd(), 'src/data/profiles.json');
+      const data = await fs.readFile(filePath, 'utf8');
+      const userData = JSON.parse(data);
+      res.status(200).json(userData);
+    } else if (req.method === 'POST') {
+      // Import the JSON file
+      const filePath = path.join(process.cwd(), 'src/data/profiles.json');
+      const data = await fs.readFile(filePath, 'utf8');
+      const userData = JSON.parse(data);
+      userData.push(newProfile);
+      const newDataFile = JSON.stringify(userData, null, 2);
+      await fs.writeFile(filePath, newDataFile);
+      res.status(200).json({ success: true });
     }
-
-    // Importing the 'fs' module to to read from and write 
-    // to a JSON file that stores user profiles.
-    const fs = require('fs');
-    
-    return new Promise<void>((resolve, reject) => {
-        if (req.method === 'GET') {
-            // If the request method is GET, it reads the JSON file, 
-            fs.readFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
-                if (err) {
-                    throw err;
-                }
-                // parses its content..
-                const userData = JSON.parse(data);
-                res.status(200).json(userData)
-            })
-        } else if (req.method === 'POST') {
-            // If the request method is POST, it reads the JSON file, 
-            fs.readFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8', (err: any, data: any) => {
-                if (err) {
-                    throw err;
-                }
-                // parses its content, 
-                const userData = JSON.parse(data);
-                // adds the new profile (`newProfile`) to the user data,
-                userData.push(newProfile);
-                // converts the updated data back to JSON format, 
-                const newDataFile = JSON.stringify(userData, null, 2);
-                // and writes it back to the file.
-                fs.writeFile("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", newDataFile, (err: any) => {
-                    if (err) {
-                        res.status(405).end();
-                        resolve();
-                    } else {
-                        res.status(200).json({ success: true });
-                    }
-                    });
-            })
-        }
-      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
