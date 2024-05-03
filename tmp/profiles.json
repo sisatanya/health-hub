@@ -58,17 +58,5 @@
     "sex": "Female",
     "birthday": "March 15, 1998",
     "religion": "Roman Catholic"
-  },
-  {
-    "username": "mgsantos1",
-    "firstName": "Mark",
-    "middleName": "Guzman",
-    "lastName": "Santos",
-    "email": "e@g.go",
-    "address": "Valenzuela City",
-    "mobileNumber": "09223454322",
-    "sex": "Male",
-    "birthday": "August 2, 1999",
-    "religion": "Born Again Christian"
   }
 ]

@@ -43,7 +43,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             }
         } else if (req.method === 'POST') {
             try {
-                const profilesPath = path.join(process.cwd(), '/tmp/profiles.json');
+                const profilesPath = path.join('/tmp/profiles.json');
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 userData.push(newProfile);

@@ -3,6 +3,7 @@
 */
 
 import * as React from 'react'
+import Head from 'next/head'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -22,6 +23,10 @@ export default function App() {
   return (
     // Rendering a container..
     <>
+      <Head>
+        <title>Search</title>
+      </Head>
+
       <Container maxWidth="lg">
         <Box
           sx={{

@@ -5,6 +5,7 @@
 */
 
 import * as React from 'react'
+import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Container, Grid, Box, Typography, Stack, Button, Avatar } from '@mui/material'
@@ -145,6 +146,10 @@ export default function App({ userData }:{ userData: any }) {
 
   return (
     <>
+      <Head>
+        <title>Profile</title>
+      </Head>
+
       <Container maxWidth="lg">
         <Box
           sx={{
