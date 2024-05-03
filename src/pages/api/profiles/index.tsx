@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Retrieving `profileId` from the request's query parameters.
   const { profileId } = req.query;
   // Retrieving user profile fields from the request's body.
-  const { id, username, password, confirmPassword, firstName, middleName, lastName, email, mobileNumber } = req.body;
+  const { id, username, password, confirmPassword, firstName, middleName, lastName, email, address, mobileNumber, sex, birthday, religion } = req.body;
   const newProfile = {
     id,
     username,
@@ -20,7 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     middleName,
     lastName,
     email,
+    address,
     mobileNumber,
+    sex,
+    birthday,
+    religion
   };
 
   try {

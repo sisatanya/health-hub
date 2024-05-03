@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useRouter } from 'next/router'
 import usePageAccess from '../hooks/usePageAccess'
 import { PageAccess } from '@/hooks/PageAccess'
+import { yellow } from '@mui/material/colors'
 const Logout = dynamic(() => import('../components/LogOut')) 
 
 const Search = () => {
@@ -30,7 +31,11 @@ const Search = () => {
     middleName: string;
     lastName: string;
     email: string;
+    address: string;
     mobileNumber: string;
+    sex: string;
+    birthday: string;
+    religion: string;
   }
   const [searchResults, setSearchResults] = useState<Profile[]>([]);
   //const [searchResults, setSearchResults] = useState([]);
@@ -53,6 +58,26 @@ const Search = () => {
     }
   }, [searchTerm]);
 
+  const getMiddleInitial = (middleName: string) => {
+    const middleInitial = `${middleName ? middleName[0]+'.' : ''}`;
+    return middleInitial;
+  };
+
+  const calculateAge = (birthday: string) => {
+    const birthDate = new Date(birthday);
+    const currentDate = new Date();
+
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+    const month = currentDate.getMonth() - birthDate.getMonth();
+    const day = currentDate.getDate() - birthDate.getDate();
+
+    if (month < 0 || (month === 0 && day < 0)) {
+      age--;
+    }
+
+    return age;
+  };
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     const results = profiles.filter((profile: Profile) => {
@@ -62,7 +87,6 @@ const Search = () => {
         (profile.firstName.toLowerCase() + ' ' + profile.lastName.toLowerCase()).includes(searchTerm.toLowerCase())
       );
     });
-    //setSearchResults(results);
     setSearchResults(results.map((profile: Profile) => ({
       ...profile,
       onClick: () => handleProfileClick(profile.username),
@@ -113,17 +137,18 @@ const Search = () => {
               </InputAdornment>
             }}
           />
-          {/* <List sx={{ width: '500px' }}>
-            {searchResults.map((result, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={`${result.lastName}, ${result.firstName}`} />
-              </ListItem>
-            ))}
-          </List> */}
           <List>
           {searchResults.map((profile: Profile, index: number) => (
             <ListItem key={index} onClick={() => handleProfileClick(profile.username)}>
-              <ListItemText primary={`${profile.lastName}, ${profile.firstName}`} />
+              <ListItemText 
+                primary={
+                  <Typography
+                    style={{ color: calculateAge(profile.birthday) >= 60 ? '#8B8000' : '#000000' }}
+                  >
+                    {profile.lastName}, {profile.firstName} {getMiddleInitial(profile.middleName)}
+                  </Typography>
+                }
+              />
             </ListItem>
           ))}
           </List>

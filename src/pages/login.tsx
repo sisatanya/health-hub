@@ -21,71 +21,73 @@ export default function App() {
       </Head>
 
       <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography 
-          variant="h5" 
-          component="h1" 
-          gutterBottom 
-          sx={{ mb: 2.5 }}
+        <Box
+          sx={{
+            mt: 12,
+            mb: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          Automation List of Health Records for residents of Valenzuela City
-        </Typography>
+          <Typography 
+            variant="h5" 
+            component="h1" 
+            gutterBottom 
+            sx={{ mb: 2.5 }}
+          >
+            Automation List of Health Records for residents of Valenzuela City
+          </Typography>
+
+          <Box
+            sx={{
+              mt: 4,
+              mb: 6,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Link href='/'>HOME</Link>
+            <Typography 
+              variant="h5" 
+              component="h5" 
+              gutterBottom 
+              sx={{ width: '15px' }}
+            >
+              
+            </Typography>
+            <Link href='/login'>LOG-IN</Link>
+          </Box>
+
+          {/* Rendering the LogInForm component..  */}
+          <LogInForm />
+          
+        </Box>
 
         <Box
           sx={{
             my: 4,
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <Link href='/'>HOME</Link>
-          <Typography 
-            variant="h5" 
-            component="h5" 
+
+          {/* <Typography 
+            variant="subtitle1"
             gutterBottom 
-            sx={{ width: '15px' }}
+            sx={{ mb: 2.5 }}
           >
             
-          </Typography>
-          <Link href='/login'>LOG-IN</Link>
-        </Box>
-
-        {/* Rendering the LogInForm component..  */}
-        <LogInForm />
-        
-      </Box>
-
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-
-        {/* <Typography 
-          variant="subtitle1"
-          gutterBottom 
-          sx={{ mb: 2.5 }}
-        >
+            <Link href='/registration'>Create account</Link> 
+          </Typography> */}
           
-          <Link href='/registration'>Create account</Link> 
-        </Typography> */}
-        
-      </Box>
-    </Container>
+        </Box>
+      </Container>
     </>
   );
 }

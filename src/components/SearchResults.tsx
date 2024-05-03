@@ -10,7 +10,11 @@ interface Profile {
   middleName: string;
   lastName: string;
   email: string;
+  address: string;
   mobileNumber: string;
+  sex: string;
+  birthday: string;
+  religion: string;
 }
 
 const SearchResults: React.FC = () => {

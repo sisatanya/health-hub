@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import usePageAccess from '../hooks/usePageAccess'
 import { PageAccess } from '@/hooks/PageAccess'
 import { useRouter } from 'next/router'
@@ -7,41 +7,80 @@ import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { Stack, Button, TextField, InputAdornment, IconButton } from '@mui/material'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-
+import profilesData from '../data/profiles.json'
 
 const RegistrationForm = () => {
-    usePageAccess(PageAccess.Public);
+    usePageAccess(PageAccess.Private);
     const router = useRouter()
 
     const initialValues:InitialValuesType = {
         // id: 0,
         username: '',
-        password: '',
-        confirmPassword: '',
         firstName: '',
         middleName: '',
         lastName: '',
         email: '',
-        mobileNumber: ''
+        address: '',
+        mobileNumber: '',
+        sex: '',
+        birthday: '',
+        religion: ''
     }
 
     type InitialValuesType = {
         // id: number,
         username: string,
-        password: string,
-        confirmPassword: string,
         firstName: string,
         middleName: string,
         lastName: string,
         email: string,
-        mobileNumber: string
+        address: string,
+        mobileNumber: string,
+        sex: string,
+        birthday: string,
+        religion: string
+    }
+
+    const makeUsername = (firstName: string, middleName: string, lastName: string) => {
+        const initialUsername = `${firstName[0]}${middleName ? middleName[0] : ''}${lastName}1`.toLowerCase();
+        let counter = 1;
+
+        console.log("initialUsername", initialUsername)
+
+        const cleanUsername = initialUsername.replace(/\d/g, '');
+        console.log("cleanUsername", cleanUsername)
+
+        // Find all similar usernames with different numbers
+        const similarUsernames = profilesData.filter((profile: { username: string }) => profile.username.startsWith(cleanUsername));
+
+        if (similarUsernames !== null) {
+            console.log("similarUsernames", similarUsernames)
+            // Find the highest number
+            const highestNumber = similarUsernames.reduce((max, profile) => {
+                const num = parseInt(profile.username.replace(cleanUsername, ''));
+                return num > max ? num : max;
+            }, 0);
+            counter = highestNumber + 1;
+            console.log("counter", counter)
+        }
+    
+        return `${cleanUsername}${counter ? counter : ''}`.toLowerCase();
     }
 
     const onSubmit = async (values: InitialValuesType) => {
         try {
-            await axios.post("/api/profiles", values)
+            // Create the username
+            const username = makeUsername(values.firstName, values.middleName, values.lastName);
+
+            // Update the values object with the new username
+            const updatedValues = {
+                ...values,
+                username,
+            };
+
+            console.log("updatedValues", updatedValues);
+
+            await axios.post("/api/profiles", updatedValues)
                 .then(response => {
                     if (response.status === 200) {
                         Swal.fire(
@@ -49,8 +88,13 @@ const RegistrationForm = () => {
                             'Registration successful.',
                             'success'
                         )
-                        router.push('/login');
                     }
+                    router.push('/search');
+                });
+            
+            await axios.get("/api/profiles")
+                .then(response => {
+                    router.reload();
                 });
         } catch (error) {
             let errorMessage = "Failed to do something exceptional";
@@ -62,28 +106,6 @@ const RegistrationForm = () => {
     }
 
     const validationSchema = Yup.object({
-        /*  Username should not exceed 10 characters and 
-            should not be less than 4 characters.*/
-        username: Yup.string()
-            .required('Username is required.')
-            .min(4,'Username should be at least 4 characters.')
-            .max(10, 'Username should not exceed 10 characters.'),
-
-        /*  Password should not exceed 15 characters and 
-            should not be less than 6 characters.
-            Password should contain at least 1 uppercase, 
-            a lowercase, a special character and a number.*/
-        password: Yup.string()
-            .required('Password is required.')
-            .min(6,'Password should be at least 6 characters.')
-            .max(15, 'Password should not exceed 15 characters.')
-            .matches(/^(?=.*[\d])(?=.*[a-zA-Z])(?=.*[-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#])/,
-                'Include at least an uppercase, a lowercase, a special character and a number.'),
-        
-        confirmPassword: Yup.string()
-            .required('Please confirm your password.')
-            .oneOf([Yup.ref('password')], 'Passwords does not match'),
-
         /*  First Name and Last Name fields are required.
             Middle name is optional. */
         firstName: Yup.string()
@@ -99,11 +121,19 @@ const RegistrationForm = () => {
             .email('Invalid email format.')
             .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Invalid email format.')
             .required('E-mail is required.'),
+
+        address: Yup.string(),
         
         /* Mobile Number must start from 0 and must have an 11-digit number. */
         mobileNumber: Yup.string()
             .required('Mobile number is required.')
-            .matches(/^[0]\d{10}$/, 'Mobile number should start with 0 and have 11 digits.')
+            .matches(/^[0]\d{10}$/, 'Mobile number should start with 0 and have 11 digits.'),
+
+        sex: Yup.string(),
+
+        birthday: Yup.string(),
+
+        religion: Yup.string(),
     })
 
     const formik = useFormik({
@@ -112,91 +142,12 @@ const RegistrationForm = () => {
         validationSchema
     })
 
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const handleClickShowPassword = () => setShowPassword(!showPassword);
-    const handleMouseDownPassword = () => setShowPassword(!showPassword);
-
     return (
         <div className='wrapper'>
         <div className='form-wrapper'>
         <form onSubmit={formik.handleSubmit}>
         <Stack justifyContent="center" alignItems="center" spacing={2.5}>
-            <div className='form-control'>
-                <TextField
-                    required
-                    type='text'
-                    label='Username'
-                    id='username'
-                    name='username'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.username}
-                    error={ Boolean(formik.touched.username && formik.errors.username) }
-                    helperText={ formik.touched.username && formik.errors.username ? (
-                        <div className='error'>{formik.errors.username}</div>
-                        ) : null }
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
-            
-            <div className='form-control'>
-                <TextField
-                    required
-                    label='Password'
-                    id='password'
-                    name='password'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                    error={ Boolean(formik.touched.password && formik.errors.password) }
-                    helperText={ formik.touched.password && formik.errors.password ? (
-                        <div className='error'>{formik.errors.password}</div>
-                        ) : null }
-                    type={showPassword ? 'text' : 'password'}
-                    InputProps={{
-                        endAdornment: <InputAdornment position='end'>
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-
-                                style={{
-                                    position: "absolute",
-                                    right: 0,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "55px",
-                                    height: "100%",
-                                    padding: 20,
-                                    }}
-                                >
-                                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                            </IconButton>
-                        </InputAdornment>
-                    }}
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
-
-            <div className='form-control'>
-                <TextField
-                    required
-                    type='password'
-                    label='Confirm Password'
-                    id='confirmPassword'
-                    name='confirmPassword'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.confirmPassword}
-                    error={ Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword) }
-                    helperText={ formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-                        <div className='error'>{formik.errors.confirmPassword}</div>
-                        ) : null }
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
-
+            {/* First Name */}
             <div className='form-control'>
                 <TextField
                     required
@@ -214,11 +165,11 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
-
+            {/* Middle Name */}
             <div className='form-control'>
                 <TextField
                     type='text'
-                    label='Middle Name (optional)'
+                    label='Middle Name'
                     id='middleName'
                     name='middleName' 
                     onChange={formik.handleChange} 
@@ -231,7 +182,7 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
-
+            {/* Last Name */}
             <div className='form-control'>
                 <TextField
                     required
@@ -249,7 +200,7 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
-
+            {/* Email */}
             <div className='form-control'>
                 <TextField
                     required
@@ -267,7 +218,25 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
-
+            {/* Address */}
+            <div className='form-control'>
+                <TextField
+                    required
+                    type='text'
+                    label='Address'
+                    id='address'
+                    name='address' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.address} 
+                    error={ Boolean(formik.touched.address && formik.errors.address) }
+                        helperText={ formik.touched.address && formik.errors.address ? (
+                            <div className='error'>{formik.errors.address}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Mobile Number */}
             <div className='form-control'>
                 <TextField
                     required
@@ -281,6 +250,60 @@ const RegistrationForm = () => {
                     error={ Boolean(formik.touched.mobileNumber && formik.errors.mobileNumber) }
                         helperText={ formik.touched.mobileNumber && formik.errors.mobileNumber ? (
                             <div className='error'>{formik.errors.mobileNumber}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Sex */}
+            <div className='form-control'>
+                <TextField
+                    required
+                    type='text'
+                    label='Sex'
+                    id='sex'
+                    name='sex' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.sex} 
+                    error={ Boolean(formik.touched.sex && formik.errors.sex) }
+                        helperText={ formik.touched.sex && formik.errors.sex ? (
+                            <div className='error'>{formik.errors.sex}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Birthday */}
+            <div className='form-control'>
+                <TextField
+                    required
+                    type='text'
+                    label='Birthday'
+                    id='birthday'
+                    name='birthday' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.birthday} 
+                    error={ Boolean(formik.touched.birthday && formik.errors.birthday) }
+                        helperText={ formik.touched.birthday && formik.errors.birthday ? (
+                            <div className='error'>{formik.errors.birthday}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Religion */}
+            <div className='form-control'>
+                <TextField
+                    required
+                    type='text'
+                    label='Religion'
+                    id='religion'
+                    name='religion' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.religion} 
+                    error={ Boolean(formik.touched.religion && formik.errors.religion) }
+                        helperText={ formik.touched.religion && formik.errors.religion ? (
+                            <div className='error'>{formik.errors.religion}</div>
                             ) : null }
                     sx={{ width: { md: 500 }}}
                 />

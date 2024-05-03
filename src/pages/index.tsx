@@ -18,7 +18,8 @@ export default function App() {
       <Container maxWidth="lg">
         <Box
           sx={{
-            my: 4,
+            mt: 12,
+            mb: 4,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -37,7 +38,8 @@ export default function App() {
 
         <Box
           sx={{
-            my: 4,
+            mt: 4,
+            mb: 6,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',

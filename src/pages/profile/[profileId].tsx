@@ -33,6 +33,12 @@ export default function App({ userData }:{ userData: any }) {
   const [showVitaminsContainer, setShowVitaminsContainer] = useState(false);
   const [showMaintenanceContainer, setShowMaintenanceContainer] = useState(false);
   const [showEditProfileContainer, setShowEditProfileContainer] = useState(false);
+  // const [isAppointmentClicked, setAppointmentIsClicked] = useState(false);
+  // const [isCheckupClicked, setIsCheckupClicked] = useState(false);
+  // const [isLaboratoryClicked, setIsLaboratoryClicked] = useState(false);
+  // const [isVaccineClicked, setIsVaccineClicked] = useState(false);
+  // const [isVitaminsClicked, setIsVitaminsClicked] = useState(false);
+  // const [isMaintenanceClicked, setIsMaintenanceClicked] = useState(false);
 
   const handleProfileClick = () => {
     setShowAppointmentContainer(false);
@@ -45,6 +51,7 @@ export default function App({ userData }:{ userData: any }) {
   };
 
   const handleAppointmentClick = () => {
+    //setAppointmentIsClicked(true);
     setShowAppointmentContainer(true);
     setShowCheckupContainer(false);
     setShowLaboratoryContainer(false);
@@ -53,9 +60,9 @@ export default function App({ userData }:{ userData: any }) {
     setShowMaintenanceContainer(false);
   };
 
-  const handleAppointmentSubmit = (appointment: Appointment) => {
-    // Save the appointment data to a JSON file
-  };
+  // const handleAppointmentSubmit = (appointment: Appointment) => {
+  //   // Save the appointment data to a JSON file
+  // };
 
   const handleCheckupClick = () => {
     setShowAppointmentContainer(false);
@@ -113,10 +120,10 @@ export default function App({ userData }:{ userData: any }) {
 
   const setupContainerView = () => {
     if (showAppointmentContainer) { 
-      return <AppointmentForm onSubmit={handleAppointmentSubmit}/>
+      return <AppointmentForm username={user} />
     }
     else if (showCheckupContainer) { 
-      return <Typography>Schedule Checkup</Typography>
+      return <Typography>Check-up</Typography>
     }
     else if (showLaboratoryContainer) { 
       return <Typography>Schedule Laboratory</Typography>
@@ -295,7 +302,18 @@ export default function App({ userData }:{ userData: any }) {
               }}
             >
               <Box>
-                <Button onClick={handleAppointmentClick}>APPOINTMENT</Button>
+                <Button 
+                  // variant="contained"
+                  // sx={{
+                  //   backgroundColor: isAppointmentClicked ? 'blue' : 'white',
+                  //   '&:hover': {
+                  //     backgroundColor: 'blue',
+                  //   },
+                  // }}
+                  onClick={handleAppointmentClick}
+                  >
+                    APPOINTMENT
+                  </Button>
               </Box>
 
               <Box>
@@ -398,11 +416,6 @@ export async function getStaticProps(context: any) {
   // `getStaticProps` to fetch the user profile data based on the dynamic `profileId` parameter.
   const { params } = context;
 
-  // const fs = require('fs');
-  // const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
-  // // Reading the profile data from a JSON file.. and 
-  //const data = JSON.parse(profilesData);
-  // finding the profile that matches the provided `profileId`.
   const profile = profilesData.find((profile: { username: string | string[] | undefined; }) => profile.username === params.profileId);  
 
   return {
@@ -415,10 +428,6 @@ export async function getStaticProps(context: any) {
 
 export async function getStaticPaths() {
   // `getStaticPaths` to generate the static paths for the dynamic routes.
-  // const fs = require('fs');
-  // const profilesData = fs.readFileSync("D:/SISACHU/projects/login-form-etc/src/data/profiles.json", 'utf8');
-  // // Reading the profile data from a JSON file.. and 
-  // const data = JSON.parse(profilesData);
 
   // creates an array of paths, where each path corresponds to a specific profile by using the username
   const paths = profilesData.map((userData: { username: any; }) => {
