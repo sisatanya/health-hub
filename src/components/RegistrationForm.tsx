@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { Stack, Button, TextField, InputAdornment, IconButton } from '@mui/material'
-import profilesData from '../data/profiles.json'
+import profilesData from '../tmp/profiles.json'
 
 const RegistrationForm = () => {
     usePageAccess(PageAccess.Private);
@@ -45,23 +45,18 @@ const RegistrationForm = () => {
         const initialUsername = `${firstName[0]}${middleName ? middleName[0] : ''}${lastName}1`.toLowerCase();
         let counter = 1;
 
-        console.log("initialUsername", initialUsername)
-
         const cleanUsername = initialUsername.replace(/\d/g, '');
-        console.log("cleanUsername", cleanUsername)
 
         // Find all similar usernames with different numbers
         const similarUsernames = profilesData.filter((profile: { username: string }) => profile.username.startsWith(cleanUsername));
 
         if (similarUsernames !== null) {
-            console.log("similarUsernames", similarUsernames)
             // Find the highest number
             const highestNumber = similarUsernames.reduce((max, profile) => {
                 const num = parseInt(profile.username.replace(cleanUsername, ''));
                 return num > max ? num : max;
             }, 0);
             counter = highestNumber + 1;
-            console.log("counter", counter)
         }
     
         return `${cleanUsername}${counter ? counter : ''}`.toLowerCase();
@@ -77,8 +72,6 @@ const RegistrationForm = () => {
                 ...values,
                 username,
             };
-
-            console.log("updatedValues", updatedValues);
 
             await axios.post("/api/profiles", updatedValues)
                 .then(response => {

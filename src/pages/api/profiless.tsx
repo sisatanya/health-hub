@@ -8,7 +8,7 @@ function readJSONFile(filePath: string) {
 }
 
 // File path to the JSON file
-const filePath = "D:/SISACHU/projects/login-form-etc/src/data/profiles.json";
+const filePath = "D:/SISACHU/projects/login-form-etc/src/tmp/profiles.json";
 
 // Function to send the profiles as a JSON response
 function sendProfiles(res: NextApiResponse) {

@@ -33,7 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         
         if (req.method === 'GET') {
             try {
-                const profilesPath = path.join(process.cwd(), 'src/data/profiles.json');
+                const profilesPath = path.join(process.cwd(), 'src/tmp/profiles.json');
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
@@ -43,7 +43,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             }
         } else if (req.method === 'POST') {
             try {
-                const profilesPath = path.join(process.cwd(), 'src/data/profiles.json');
+                const profilesPath = path.join(process.cwd(), 'src/tmp/profiles.json');
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 userData.push(newProfile);

@@ -79,7 +79,16 @@ export default function App() {
           >
             
           </Typography>
-          <Logout />
+          {/* <Logout /> */}
+          <Link href='/search'>ABOUT</Link>
+          <Typography 
+            variant="h5" 
+            component="h5" 
+            gutterBottom 
+            sx={{ width: '15px' }}
+          >
+            
+          </Typography>
         </Box>
 
       </Container>

@@ -14,7 +14,7 @@ const Profiles = dynamic(() => import('../../components/Profiles'))
 const AppointmentForm = dynamic(() => import('../../components/AppointmentForm'))
 const Logout = dynamic(() => import('../../components/LogOut'))
 
-import profilesData from '../../data/profiles.json'
+import profilesData from '../../tmp/profiles.json'
 // The Profiles and Logout components are dynamically imported
 // which means they will be loaded when they are required instead
 // of loading them all at once the page loads.
