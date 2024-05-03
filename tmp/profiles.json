@@ -1,0 +1,74 @@
+[
+  {
+    "username": "jdelacruz1",
+    "firstName": "Jaemin",
+    "middleName": "",
+    "lastName": "Dela Cruz",
+    "email": "e@mail.com",
+    "address": "Valenzuela City",
+    "mobileNumber": "09334456666",
+    "sex": "Male",
+    "birthday": "August 13, 2000",
+    "religion": "Roman Catholic"
+  },
+  {
+    "username": "jdelacruz2",
+    "firstName": "Janella",
+    "middleName": "",
+    "lastName": "Dela Cruz",
+    "email": "a@mail.com",
+    "address": "Valenzuela City",
+    "mobileNumber": "09123456897",
+    "sex": "Female",
+    "birthday": "February 19, 1999",
+    "religion": "Roman Catholic"
+  },
+  {
+    "username": "jdelacruz3",
+    "firstName": "Juanito",
+    "middleName": "",
+    "lastName": "Dela Cruz",
+    "email": "park@mail.com",
+    "address": "Valenzuela City",
+    "mobileNumber": "09123456789",
+    "sex": "Female",
+    "birthday": "May 8, 1996",
+    "religion": "Roman Catholic"
+  },
+  {
+    "username": "jdelacruz4",
+    "firstName": "Janet",
+    "middleName": "",
+    "lastName": "Dela Cruz",
+    "email": "rjh@mail.com",
+    "address": "Valenzuela City",
+    "mobileNumber": "09654334567",
+    "sex": "Female",
+    "birthday": "December 29, 1940",
+    "religion": "Roman Catholic"
+  },
+  {
+    "username": "jdelacruz5",
+    "firstName": "Jane",
+    "middleName": "",
+    "lastName": "Dela Cruz",
+    "email": "zcl@mail.com",
+    "address": "Valenzuela City",
+    "mobileNumber": "09345656677",
+    "sex": "Female",
+    "birthday": "March 15, 1998",
+    "religion": "Roman Catholic"
+  },
+  {
+    "username": "mgsantos1",
+    "firstName": "Mark",
+    "middleName": "Guzman",
+    "lastName": "Santos",
+    "email": "e@g.go",
+    "address": "Valenzuela City",
+    "mobileNumber": "09223454322",
+    "sex": "Male",
+    "birthday": "August 2, 1999",
+    "religion": "Born Again Christian"
+  }
+]

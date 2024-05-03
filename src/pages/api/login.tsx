@@ -16,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { username, password, attempt } = req.body
   
     // Accessing the JSON file containing the users.
-    //const profiles = require("D:/SISACHU/projects/login-form-etc/src/tmp/admins.json");
-    const profilesPath = path.join(process.cwd(), 'src/tmp/admins.json');
+    //const profiles = require("D:/SISACHU/projects/login-form-etc//tmp/admins.json");
+    const profilesPath = path.join(process.cwd(), '/tmp/admins.json');
     const profilesData = fs.readFileSync(profilesPath, 'utf8');
     const profiles = JSON.parse(profilesData);
     // Finding the matching username and password the user inputted
