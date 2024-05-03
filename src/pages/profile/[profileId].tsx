@@ -116,6 +116,7 @@ export default function App({ userData }:{ userData: any }) {
     setShowLaboratoryContainer(false);
     setShowVaccineContainer(false);
     setShowVitaminsContainer(false);
+    setShowMaintenanceContainer(false);
     setShowEditProfileContainer(true);
   };
 

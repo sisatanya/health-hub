@@ -112,21 +112,23 @@ const RegistrationForm = () => {
         /* Email Address must be valid. */
         email: Yup.string()
             .email('Invalid email format.')
-            .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Invalid email format.')
-            .required('E-mail is required.'),
+            .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Invalid email format.'),
 
-        address: Yup.string(),
+        address: Yup.string()
+            .required('Address is required.'),
         
         /* Mobile Number must start from 0 and must have an 11-digit number. */
         mobileNumber: Yup.string()
-            .required('Mobile number is required.')
             .matches(/^[0]\d{10}$/, 'Mobile number should start with 0 and have 11 digits.'),
 
-        sex: Yup.string(),
+        sex: Yup.string()
+            .required('Sex is required.'),
 
-        birthday: Yup.string(),
+        birthday: Yup.string()
+            .required('Birthday is required.'),
 
-        religion: Yup.string(),
+        religion: Yup.string()
+            .required('Religion is required.'),
     })
 
     const formik = useFormik({
@@ -193,60 +195,6 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
-            {/* Email */}
-            <div className='form-control'>
-                <TextField
-                    required
-                    type='text'
-                    label='E-mail'
-                    id='email'
-                    name='email' 
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} 
-                    value={formik.values.email} 
-                    error={ Boolean(formik.touched.email && formik.errors.email) }
-                        helperText={ formik.touched.email && formik.errors.email ? (
-                            <div className='error'>{formik.errors.email}</div>
-                            ) : null }
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
-            {/* Address */}
-            <div className='form-control'>
-                <TextField
-                    required
-                    type='text'
-                    label='Address'
-                    id='address'
-                    name='address' 
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}  
-                    value={formik.values.address} 
-                    error={ Boolean(formik.touched.address && formik.errors.address) }
-                        helperText={ formik.touched.address && formik.errors.address ? (
-                            <div className='error'>{formik.errors.address}</div>
-                            ) : null }
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
-            {/* Mobile Number */}
-            <div className='form-control'>
-                <TextField
-                    required
-                    type='text'
-                    label='Mobile Number'
-                    id='mobileNumber'
-                    name='mobileNumber' 
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}  
-                    value={formik.values.mobileNumber} 
-                    error={ Boolean(formik.touched.mobileNumber && formik.errors.mobileNumber) }
-                        helperText={ formik.touched.mobileNumber && formik.errors.mobileNumber ? (
-                            <div className='error'>{formik.errors.mobileNumber}</div>
-                            ) : null }
-                    sx={{ width: { md: 500 }}}
-                />
-            </div>
             {/* Sex */}
             <div className='form-control'>
                 <TextField
@@ -283,6 +231,24 @@ const RegistrationForm = () => {
                     sx={{ width: { md: 500 }}}
                 />
             </div>
+            {/* Address */}
+            <div className='form-control'>
+                <TextField
+                    required
+                    type='text'
+                    label='Address'
+                    id='address'
+                    name='address' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.address} 
+                    error={ Boolean(formik.touched.address && formik.errors.address) }
+                        helperText={ formik.touched.address && formik.errors.address ? (
+                            <div className='error'>{formik.errors.address}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
             {/* Religion */}
             <div className='form-control'>
                 <TextField
@@ -297,6 +263,40 @@ const RegistrationForm = () => {
                     error={ Boolean(formik.touched.religion && formik.errors.religion) }
                         helperText={ formik.touched.religion && formik.errors.religion ? (
                             <div className='error'>{formik.errors.religion}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Email */}
+            <div className='form-control'>
+                <TextField
+                    type='text'
+                    label='E-mail'
+                    id='email'
+                    name='email' 
+                    onChange={formik.handleChange} 
+                    onBlur={formik.handleBlur} 
+                    value={formik.values.email} 
+                    error={ Boolean(formik.touched.email && formik.errors.email) }
+                        helperText={ formik.touched.email && formik.errors.email ? (
+                            <div className='error'>{formik.errors.email}</div>
+                            ) : null }
+                    sx={{ width: { md: 500 }}}
+                />
+            </div>
+            {/* Mobile Number */}
+            <div className='form-control'>
+                <TextField
+                    type='text'
+                    label='Mobile Number'
+                    id='mobileNumber'
+                    name='mobileNumber' 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}  
+                    value={formik.values.mobileNumber} 
+                    error={ Boolean(formik.touched.mobileNumber && formik.errors.mobileNumber) }
+                        helperText={ formik.touched.mobileNumber && formik.errors.mobileNumber ? (
+                            <div className='error'>{formik.errors.mobileNumber}</div>
                             ) : null }
                     sx={{ width: { md: 500 }}}
                 />
