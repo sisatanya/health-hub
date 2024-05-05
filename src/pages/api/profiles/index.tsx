@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     religion
   };
   
-  const fs2 = require('fs');
+  //const fs2 = require('fs');
 
   try {
     if (req.method === 'GET') {
@@ -41,9 +41,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
       const filePath = path.join('/tmp', 'profiles.json');
       // Check if the file exists, if not, create it
-      if (!fs2.existsSync(filePath)) {
-          fs.writeFile(filePath, '[]', 'utf8');
-      }
+      // if (!fs2.existsSync(filePath)) {
+      //     fs.writeFile(filePath, '[]', 'utf8');
+      // }
       const data = await fs.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       userData.push(newProfile);

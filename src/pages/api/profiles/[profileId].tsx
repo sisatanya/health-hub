@@ -34,10 +34,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (req.method === 'GET') {
             try {
                 const profilesPath = path.join(process.cwd(), '/tmp/profiles.json');
-                // Check if the file exists, if not, create it
-                if (!fs2.existsSync(profilesPath)) {
-                    fs.writeFile(profilesPath, '[]', 'utf8');
-                }
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
@@ -48,6 +44,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         } else if (req.method === 'POST') {
             try {
                 // const profilesPath = path.join(process.cwd() + '/tmp/profiles.json');
+                // Check if the file exists, if not, create it
+                // if (!fs2.existsSync(profilesPath)) {
+                //     fs.writeFile(profilesPath, '[]', 'utf8');
+                // }
                 const profilesPath = path.join('/tmp', 'profiles.json');
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
