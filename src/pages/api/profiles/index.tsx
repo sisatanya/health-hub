@@ -26,27 +26,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     birthday,
     religion
   };
-  
-  const fs = require('fs');
 
   try {
+    const fs = require('fs');
+    const filePath = path.join('/tmp', 'profiles.json');
+    // Check if the file exists, if not, create it
+    if (!fs.existsSync(filePath)) {
+      fs.writeFile(filePath, '[]', (err: Error) => err && console.error(err));
+    }
+    const data = await fsPromises.readFile(filePath, 'utf8');
+    const userData = JSON.parse(data);
+    
     if (req.method === 'GET') {
       // Import the JSON file
-      const filePath = path.join(process.cwd(), '/tmp/profiles.json');
-      const data = await fsPromises.readFile(filePath, 'utf8');
-      const userData = JSON.parse(data);
       res.status(200).json(userData);
     } 
     else if (req.method === 'POST') {
       // Import the JSON file
-      // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
-      const filePath = path.join('/tmp', 'profiles.json');
-      // Check if the file exists, if not, create it
-      if (!fs.existsSync(filePath)) {
-        fs.writeFile(filePath, '[]', (err: Error) => err && console.error(err));
-      }
-      const data = await fsPromises.readFile(filePath, 'utf8');
-      const userData = JSON.parse(data);
       userData.push(newProfile);
       const newDataFile = JSON.stringify(userData, null, 2);
       fs.writeFile(filePath, newDataFile, (err: Error) => err && console.error(err));
