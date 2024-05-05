@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const data = await fsPromises.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       res.status(200).json(userData);
-    } else if (req.method === 'POST') {
+    } 
+    else if (req.method === 'POST') {
       // Import the JSON file
       // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
       const filePath = path.join('/tmp', 'profiles.json');
@@ -51,7 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fs.writeFile(filePath, newDataFile, (err: Error) => err && console.error(err));
       res.status(200).json({ success: true });
     }
-  } catch (error) {
+  } 
+  catch (error) {
     console.error(error);
     console.log(error);
     res.status(500).json({ error: 'Internal server error' });

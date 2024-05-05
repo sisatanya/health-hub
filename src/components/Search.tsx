@@ -44,7 +44,7 @@ const Search = () => {
 
   useEffect(() => {
     const fetchProfiles = async () => {
-      const response = await fetch('/api/profiless');
+      const response = await fetch('/api/profiles');
       const data = await response.json();
       setProfiles(data);
     };

@@ -28,6 +28,13 @@ const usePageAccess = (requiredAccess: PageAccess): boolean => {
       // When a logged in user tries to access a public-only page,
       // the user is redirected to their own profile.
       //router.replace(`/profile/${username}`)
+      // the user is redirected to the login page.
+      Swal.fire(
+        'You are logged in.',
+        'Redirecting to search page.',
+        'warning'
+      )
+      router.replace('/search');
     } 
     else if (requiredAccess === PageAccess.Private && !username) {
       // When the user is NOT logged in and they try to access a private-only page,
