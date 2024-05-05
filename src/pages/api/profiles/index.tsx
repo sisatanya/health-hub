@@ -26,6 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     birthday,
     religion
   };
+  
+  const fs = require('fs');
 
   try {
     if (req.method === 'GET') {
@@ -38,6 +40,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Import the JSON file
       // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
       const filePath = path.join('/tmp', 'profiles.json');
+      // Check if the file exists, if not, create it
+      if (!fs.existsSync(filePath)) {
+          fs.writeFileSync(filePath, '[]', 'utf8');
+      }
       const data = await fs.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       userData.push(newProfile);
