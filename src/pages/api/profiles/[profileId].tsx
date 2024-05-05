@@ -7,7 +7,7 @@ import path from 'path';
 import { promises as fsPromises } from 'fs';
 import Error from 'next/error';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Retrieving `profileId` from the request's query parameters.
     const { profileId } = req.query
     // Retrieving user profile fields from the request's body.
@@ -29,34 +29,33 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Importing the 'fs' module to to read from and write 
     // to a JSON file that stores user profiles.
     const fs = require('fs');
+    const profilesPath = path.join('/tmp', 'profiles.json');
+    // Check if the file exists, if not, create it
+    if (!fs.existsSync(profilesPath)) {
+        fs.writeFile(profilesPath, '[]', (err: Error) => err && console.error(err));
+    }
+    const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
+    const userData = JSON.parse(profilesData);
     
     return new Promise<void>(async (resolve, reject) => {
         
         if (req.method === 'GET') {
             try {
-                const profilesPath = path.join(process.cwd(), '/tmp/profiles.json');
-                const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
-                const userData = JSON.parse(profilesData);
                 const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
                 res.status(200).json(profile);
-            } catch (error) {
+            } 
+            catch (error) {
                 throw error;
             }
-        } else if (req.method === 'POST') {
+        } 
+        else if (req.method === 'POST') {
             try {
-                // const profilesPath = path.join(process.cwd() + '/tmp/profiles.json');
-                const profilesPath = path.join('/tmp', 'profiles.json');
-                // Check if the file exists, if not, create it
-                if (!fs.existsSync(profilesPath)) {
-                    fs.writeFile(profilesPath, '[]', (err: Error) => err && console.error(err));
-                }
-                const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
-                const userData = JSON.parse(profilesData);
                 userData.push(newProfile);
                 const newDataFile = JSON.stringify(userData, null, 2);
                 fs.writeFile(profilesPath, newDataFile, (err: Error) => err && console.error(err));
                 res.status(200).json({ success: true });
-            } catch (error) {
+            } 
+            catch (error) {
                 res.status(405).end();
             }
         }
