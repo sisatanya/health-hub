@@ -42,13 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const filePath = path.join('/tmp', 'profiles.json');
       // Check if the file exists, if not, create it
       if (!fs.existsSync(filePath)) {
-        await fsPromises.writeFile(filePath, '[]');
+        fs.writeFile(filePath, '[]', (err: Error) => err && console.error(err));
       }
       const data = await fsPromises.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       userData.push(newProfile);
       const newDataFile = JSON.stringify(userData, null, 2);
-      await fs.writeFile(filePath, newDataFile);
+      fs.writeFile(filePath, newDataFile, (err: Error) => err && console.error(err));
       res.status(200).json({ success: true });
     }
   } catch (error) {

@@ -5,6 +5,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path';
 import { promises as fsPromises } from 'fs';
+import Error from 'next/error';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Retrieving `profileId` from the request's query parameters.
@@ -47,13 +48,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 const profilesPath = path.join('/tmp', 'profiles.json');
                 // Check if the file exists, if not, create it
                 if (!fs.existsSync(profilesPath)) {
-                    await fsPromises.writeFile(profilesPath, '[]');
+                    fs.writeFile(profilesPath, '[]', (err: Error) => err && console.error(err));
                 }
                 const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 userData.push(newProfile);
                 const newDataFile = JSON.stringify(userData, null, 2);
-                await fsPromises.writeFile(profilesPath, newDataFile);
+                fs.writeFile(profilesPath, newDataFile, (err: Error) => err && console.error(err));
                 res.status(200).json({ success: true });
             } catch (error) {
                 res.status(405).end();
