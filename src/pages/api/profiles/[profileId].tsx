@@ -4,7 +4,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path';
-import { promises as fs } from 'fs';
+import { promises as fsPromises } from 'fs';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Retrieving `profileId` from the request's query parameters.
@@ -27,14 +27,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Importing the 'fs' module to to read from and write 
     // to a JSON file that stores user profiles.
-    const fs2 = require('fs');
+    const fs = require('fs');
     
     return new Promise<void>(async (resolve, reject) => {
         
         if (req.method === 'GET') {
             try {
                 const profilesPath = path.join(process.cwd(), '/tmp/profiles.json');
-                const profilesData = await fs.readFile(profilesPath, 'utf8');
+                const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
                 res.status(200).json(profile);
@@ -44,16 +44,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         } else if (req.method === 'POST') {
             try {
                 // const profilesPath = path.join(process.cwd() + '/tmp/profiles.json');
-                // Check if the file exists, if not, create it
-                // if (!fs2.existsSync(profilesPath)) {
-                //     fs.writeFile(profilesPath, '[]', 'utf8');
-                // }
                 const profilesPath = path.join('/tmp', 'profiles.json');
-                const profilesData = await fs.readFile(profilesPath, 'utf8');
+                // Check if the file exists, if not, create it
+                if (!fs.existsSync(profilesPath)) {
+                    await fsPromises.writeFile(profilesPath, '[]', 'utf8');
+                }
+                const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
                 userData.push(newProfile);
                 const newDataFile = JSON.stringify(userData, null, 2);
-                await fs.writeFile(profilesPath, newDataFile);
+                await fsPromises.writeFile(profilesPath, newDataFile);
                 res.status(200).json({ success: true });
             } catch (error) {
                 res.status(405).end();

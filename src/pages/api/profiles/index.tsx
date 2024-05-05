@@ -4,7 +4,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import path from 'path';
-import { promises as fs } from 'fs';
+import { promises as fsPromises } from 'fs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Retrieving `profileId` from the request's query parameters.
@@ -27,13 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     religion
   };
   
-  //const fs2 = require('fs');
+  const fs = require('fs');
 
   try {
     if (req.method === 'GET') {
       // Import the JSON file
       const filePath = path.join(process.cwd(), '/tmp/profiles.json');
-      const data = await fs.readFile(filePath, 'utf8');
+      const data = await fsPromises.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       res.status(200).json(userData);
     } else if (req.method === 'POST') {
@@ -41,10 +41,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
       const filePath = path.join('/tmp', 'profiles.json');
       // Check if the file exists, if not, create it
-      // if (!fs2.existsSync(filePath)) {
-      //     fs.writeFile(filePath, '[]', 'utf8');
-      // }
-      const data = await fs.readFile(filePath, 'utf8');
+      if (!fs.existsSync(filePath)) {
+        await fsPromises.writeFile(filePath, '[]', 'utf8');
+      }
+      const data = await fsPromises.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       userData.push(newProfile);
       const newDataFile = JSON.stringify(userData, null, 2);
@@ -53,6 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error(error);
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
