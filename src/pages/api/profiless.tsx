@@ -1,10 +1,10 @@
-import fs from 'fs';
 import path from 'path';
+import { promises as fsPromises } from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-
+const fs = require('fs');
 // Function to read the JSON file
-function readJSONFile(filePath: string) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+async function readJSONFile(filePath: string) {
+  return JSON.parse(await fsPromises.readFile(filePath, 'utf-8'));
 }
 
 // File path to the JSON file
@@ -23,7 +23,7 @@ function sendProfiles(res: NextApiResponse) {
 
 // Function to watch for changes in the profiles.json file
 function watchProfiles(res: NextApiResponse) {
-  fs.watch(filePath, (event, filename) => {
+  fs.watch(filePath, (event: any, filename: any) => {
     // Log the event for debugging purposes
 
     // Reload the profiles when the file is modified
@@ -31,7 +31,7 @@ function watchProfiles(res: NextApiResponse) {
   });
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Send the initial profiles
   sendProfiles(res);
 
