@@ -27,7 +27,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Importing the 'fs' module to to read from and write 
     // to a JSON file that stores user profiles.
-    const fs = require('fs');
+    const fs2 = require('fs');
     
     return new Promise<void>(async (resolve, reject) => {
         
@@ -35,8 +35,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             try {
                 const profilesPath = path.join(process.cwd(), '/tmp/profiles.json');
                 // Check if the file exists, if not, create it
-                if (!fs.existsSync(profilesPath)) {
-                    fs.writeFileSync(profilesPath, '[]', 'utf8');
+                if (!fs2.existsSync(profilesPath)) {
+                    fs.writeFile(profilesPath, '[]', 'utf8');
                 }
                 const profilesData = await fs.readFile(profilesPath, 'utf8');
                 const userData = JSON.parse(profilesData);
