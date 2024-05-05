@@ -41,10 +41,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         if (req.method === 'GET') {
             try {
+                console.log("api", userData)
                 const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
                 res.status(200).json(profile);
             } 
             catch (error) {
+                console.log("api error", error)
                 throw error;
             }
         } 
