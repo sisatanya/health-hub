@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(userData);
     } else if (req.method === 'POST') {
       // Import the JSON file
-      const filePath = path.join(process.cwd(), '/tmp/profiles.json');
+      // const filePath = path.join(process.cwd() + '/tmp/profiles.json');
+      const filePath = path.join('/tmp', 'profiles.json');
       const data = await fs.readFile(filePath, 'utf8');
       const userData = JSON.parse(data);
       userData.push(newProfile);
