@@ -41,18 +41,27 @@ const RegistrationForm = () => {
         religion: string
     }
 
-    const makeUsername = (firstName: string, middleName: string, lastName: string) => {
+    const fetchProfiles = async () => {
+        const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://health-hub-kappa.vercel.app';
+        const response = await fetch(`${baseUrl}/api/profiles`);
+        const data = await response.json();
+        return data;
+      };
+
+    const makeUsername = async (firstName: string, middleName: string, lastName: string) => {
         const initialUsername = `${firstName[0]}${middleName ? middleName[0] : ''}${lastName}1`.toLowerCase();
         let counter = 1;
 
         const cleanUsername = initialUsername.replace(/\d/g, '');
 
+        const profiles = await fetchProfiles();
+
         // Find all similar usernames with different numbers
-        const similarUsernames = profilesData.filter((profile: { username: string }) => profile.username.startsWith(cleanUsername));
+        const similarUsernames = profiles.filter((profile: { username: string }) => profile.username.startsWith(cleanUsername));
 
         if (similarUsernames !== null) {
             // Find the highest number
-            const highestNumber = similarUsernames.reduce((max, profile) => {
+            const highestNumber = similarUsernames.reduce((max: number, profile: { username: string }) => {
                 const num = parseInt(profile.username.replace(cleanUsername, ''));
                 return num > max ? num : max;
             }, 0);
