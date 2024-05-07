@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const username2 = Array.isArray(profileId) ? profileId[0] : profileId || '';
                 const { rows } = await sql`SELECT * FROM profiles WHERE username = ${username2};`;
+                console.log("rows", rows)
                 const userData = rows.map((row: any) => ({
                   id: row.id,
                   username: row.username,
@@ -50,6 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 res.status(200).json(userData);
             } 
             catch (error) {
+                console.log("error", error)
                 throw error;
             }
         } 
