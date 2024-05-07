@@ -72,7 +72,7 @@ const RegistrationForm = () => {
                 ...values,
                 username,
             };
-
+            
             await axios.post("/api/profiles", updatedValues)
                 .then(response => {
                     if (response.status === 200) {
@@ -83,6 +83,9 @@ const RegistrationForm = () => {
                         )
                     }
                     router.push('/search');
+                })
+                .catch(error => {
+                    console.error(error);
                 });
             
             await axios.get("/api/profiles")

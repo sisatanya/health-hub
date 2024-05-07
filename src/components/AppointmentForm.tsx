@@ -50,21 +50,16 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ username }) => {
 
   const onSubmit = async (values: InitialValuesType) => {
     try {
-      // await axios.post("/api/profiles", updatedValues)
-      //     .then(response => {
-      //         if (response.status === 200) {
-      //             Swal.fire(
-      //                 'Congratulations',
-      //                 'Registration successful.',
-      //                 'success'
-      //             )
-      //         }
-      //         router.push('/search');
-      //     });
-      
-      await axios.get("/api/profiles")
+      await axios.post("/api/appointments", values)
           .then(response => {
-              router.reload();
+              if (response.status === 200) {
+                  Swal.fire(
+                      'Congratulations',
+                      'Registration successful.',
+                      'success'
+                  )
+              }
+              router.push('/search');
           });
     } catch (error) {
         let errorMessage = "Failed to do something exceptional";

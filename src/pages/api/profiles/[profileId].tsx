@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path';
 import { promises as fsPromises } from 'fs';
 import Error from 'next/error';
+import { sql } from "@vercel/postgres";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Retrieving `profileId` from the request's query parameters.
@@ -26,35 +27,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         religion
     }
 
-    // Importing the 'fs' module to to read from and write 
-    // to a JSON file that stores user profiles.
-    const fs = require('fs');
-    const profilesPath = path.join('/tmp', 'profiles.json');
-    // Check if the file exists, if not, create it
-    if (!fs.existsSync(profilesPath)) {
-        fs.writeFile(profilesPath, '[]', (err: Error) => err && console.error(err));
-    }
-    const profilesData = await fsPromises.readFile(profilesPath, 'utf8');
-    const userData = JSON.parse(profilesData);
-    
+    const client = await sql.connect();
     return new Promise<void>(async (resolve, reject) => {
         
         if (req.method === 'GET') {
             try {
-                console.log("api", userData)
-                const profile = userData.find((profile: { username: string | string[] | undefined; }) => profile.username === profileId);
-                res.status(200).json(profile);
+                const username2 = Array.isArray(profileId) ? profileId[0] : profileId || '';
+                const { rows } = await sql`SELECT * FROM profiles WHERE username = ${username2};`;
+                const userData = rows.map((row: any) => ({
+                  id: row.id,
+                  username: row.username,
+                  firstName: row.firstname,
+                  middleName: row.middlename,
+                  lastName: row.lastname,
+                  email: row.email,
+                  address: row.address,
+                  mobileNumber: row.mobilenumber,
+                  sex: row.sex,
+                  birthday: row.birthday,
+                  religion: row.religion,
+                }));
+                res.status(200).json(userData);
             } 
             catch (error) {
-                console.log("api error", error)
                 throw error;
             }
         } 
         else if (req.method === 'POST') {
             try {
-                userData.push(newProfile);
-                const newDataFile = JSON.stringify(userData, null, 2);
-                fs.writeFile(profilesPath, newDataFile, (err: Error) => err && console.error(err));
+                await sql`INSERT INTO profiles (username, firstName, middleName, lastName, email, address, mobileNumber, sex, birthday, religion) VALUES (${username}, ${firstName}, ${middleName}, ${lastName}, ${email}, ${address}, ${mobileNumber}, ${sex}, ${birthday}, ${religion});`;
                 res.status(200).json({ success: true });
             } 
             catch (error) {

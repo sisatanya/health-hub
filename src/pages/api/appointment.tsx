@@ -11,23 +11,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Retrieving `profileId` from the request's query parameters.
   const { profileId } = req.query;
   // Retrieving user profile fields from the request's body.
-  const { username, firstName, middleName, lastName, email, address, mobileNumber, sex, birthday, religion } = req.body;
+  const { date, time, user } = req.body;
 
   try {
     const client = await sql.connect();
     await client.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
+      CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
-        firstName VARCHAR(255) NOT NULL,
-        middleName VARCHAR(255),
-        lastName VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        address VARCHAR(255) NOT NULL,
-        mobileNumber VARCHAR(255) NOT NULL,
-        sex VARCHAR(255) NOT NULL,
-        birthday DATE NOT NULL,
-        religion VARCHAR(255) NOT NULL
+        date DATE NOT NULL,
+        time VARCHAR(255) NOT NULL
       )
     `);
 
@@ -36,25 +29,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // `);
     
     if (req.method === 'GET') {
-      const { rows } = await sql`SELECT * FROM profiles;`;
+      const { rows } = await sql`SELECT * FROM appointments;`;
       const userData = rows.map((row: any) => ({
         id: row.id,
-        username: row.username,
-        firstName: row.firstname,
-        middleName: row.middlename,
-        lastName: row.lastname,
-        email: row.email,
-        address: row.address,
-        mobileNumber: row.mobilenumber,
-        sex: row.sex,
-        birthday: row.birthday,
-        religion: row.religion,
+        user: row.username,
+        date: row.date,
+        time: row.time,
       }));
       //console.log("userData", userData)
       res.status(200).json(userData);
     } 
     else if (req.method === 'POST') {
-      await sql`INSERT INTO profiles (username, firstName, middleName, lastName, email, address, mobileNumber, sex, birthday, religion) VALUES (${username}, ${firstName}, ${middleName}, ${lastName}, ${email}, ${address}, ${mobileNumber}, ${sex}, ${birthday}, ${religion});`;
+      await sql`INSERT INTO appointments (username, date, time) VALUES (${user}, ${date}, ${time});`;
       res.status(200).json({ success: true });
     }
   } 

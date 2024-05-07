@@ -4,8 +4,6 @@ import { useUser } from '../hooks/useUser';
 interface Profile {
   id: number;
   username: string;
-  password: string;
-  confirmPassword: string;
   firstName: string;
   middleName: string;
   lastName: string;

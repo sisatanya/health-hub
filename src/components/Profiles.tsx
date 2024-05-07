@@ -10,19 +10,19 @@ import { useUser } from '../hooks/useUser'
 import { Stack, Typography } from '@mui/material'
 
 
-const Profile = ({ userData }:{ userData: any }) => {
+const Profile = ({ userProfile }:{ userProfile: any }) => {
     // The profile page is a private-only page.
     // The useAccessPage hook is set to private.
     usePageAccess(PageAccess.Private);
-    const [profileData, setProfileData] = useState(userData);
+    const [profileData, setProfileData] = useState(userProfile);
     const router = useRouter();
     const { user } = useUser();
 
     // This useEffect hook is to update the profileData state 
-    // when the userData prop changes.
+    // when the userProfile prop changes.
     useEffect(() => {
-      setProfileData(userData);
-    }, [userData]);
+      setProfileData(userProfile);
+    }, [userProfile]);
 
     const calculateAge = (birthday: string) => {
       const birthDate = new Date(birthday);
@@ -38,6 +38,20 @@ const Profile = ({ userData }:{ userData: any }) => {
     
       return age;
     };
+
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+    
+      const month = monthNames[date.getMonth()];
+      const day = date.getDate();
+      const year = date.getFullYear();
+    
+      return `${month} ${day}, ${year}`;
+    };
     
     return (
         <div className='wrapper'>
@@ -45,10 +59,10 @@ const Profile = ({ userData }:{ userData: any }) => {
 
         <Stack justifyContent="left" alignItems="left">
           <Typography variant="subtitle1" gutterBottom sx={{ mb: 1 }}> PERSONAL INFORMATION </Typography>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> SEX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{userData.sex} </Typography>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> AGE: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{calculateAge(userData.birthday)} years old</Typography>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> BIRTHDAY:&nbsp;&nbsp;&nbsp;{userData.birthday} </Typography>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 1.5 }}> RELIGION: &nbsp;&nbsp;&nbsp;{userData.religion} </Typography>
+          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> SEX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{userProfile.sex} </Typography>
+          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> AGE: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{calculateAge(userProfile.birthday)} years old</Typography>
+          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> BIRTHDAY:&nbsp;&nbsp;&nbsp;{formatDate(userProfile.birthday)} </Typography>
+          <Typography variant="subtitle2" gutterBottom sx={{ mb: 1.5 }}> RELIGION: &nbsp;&nbsp;&nbsp;{userProfile.religion} </Typography>
         </Stack>
 
         <Stack justifyContent="left" alignItems="left">
@@ -56,7 +70,7 @@ const Profile = ({ userData }:{ userData: any }) => {
           <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> MOTHER:&nbsp;&nbsp;&nbsp; </Typography>
           <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> FATHER:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
           <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> SIBLING:&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> SIBLING:&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
+          {/* <Typography variant="subtitle2" gutterBottom sx={{ mb: 0.2 }}> SIBLING:&nbsp;&nbsp;&nbsp;&nbsp; </Typography> */}
         </Stack>
         
         </div>

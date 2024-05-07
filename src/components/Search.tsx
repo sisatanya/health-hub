@@ -25,8 +25,6 @@ const Search = () => {
   interface Profile {
     id: number;
     username: string;
-    password: string;
-    confirmPassword: string;
     firstName: string;
     middleName: string;
     lastName: string;
@@ -46,11 +44,15 @@ const Search = () => {
     const fetchProfiles = async () => {
       const response = await fetch('/api/profiles');
       const data = await response.json();
+      console.log("data", data)
       setProfiles(data);
     };
-
     fetchProfiles();
-  }, []);
+  }, [searchTerm, searchResults]);
+
+  useEffect(() => {
+    console.log("profiles", profiles)
+  }, [profiles]);
 
   useEffect(() => {
     if (searchTerm === '' || searchTerm === null) {

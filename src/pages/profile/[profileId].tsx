@@ -10,7 +10,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Container, Grid, Box, Typography, Stack, Button, Avatar } from '@mui/material'
 import { useUser } from '../../hooks/useUser'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 const Profiles = dynamic(() => import('../../components/Profiles'))
 const AppointmentForm = dynamic(() => import('../../components/AppointmentForm'))
 const Logout = dynamic(() => import('../../components/LogOut'))
@@ -23,9 +23,11 @@ import profilesData from '../../tmp/profiles.json'
 interface Appointment {
   date: string;
   time: string;
+  user: string;
 }
 
 export default function App({ userData }:{ userData: any }) {
+  const userProfile = userData[0];
   const { user, barangay } = useUser();
   const [showAppointmentContainer, setShowAppointmentContainer] = useState(false);
   const [showCheckupContainer, setShowCheckupContainer] = useState(false);
@@ -122,7 +124,7 @@ export default function App({ userData }:{ userData: any }) {
 
   const setupContainerView = () => {
     if (showAppointmentContainer) { 
-      return <AppointmentForm username={user} />
+      return <AppointmentForm username={userProfile.username} />
     }
     else if (showCheckupContainer) { 
       return <Typography>Check-up</Typography>
@@ -200,7 +202,7 @@ export default function App({ userData }:{ userData: any }) {
             
           </Typography>
           <Link 
-            href={`/profile/${userData.username}`} 
+            href={`/profile/${userProfile.username}`} 
             onClick={handleProfileClick}
           >
             PROFILE
@@ -256,8 +258,8 @@ export default function App({ userData }:{ userData: any }) {
                     alignItems: 'left',
                   }}
                 >
-                  <Typography variant="h4" gutterBottom sx={{ mb: 0 }}>{userData.lastName}, {userData.firstName}</Typography>
-                  <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>{userData.address}</Typography>
+                  <Typography variant="h4" gutterBottom sx={{ mb: 0 }}>{userProfile.lastName}, {userProfile.firstName}</Typography>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>{userProfile.address}</Typography>
                 </Box>
               </Grid>
             </>
@@ -289,8 +291,8 @@ export default function App({ userData }:{ userData: any }) {
                     alignItems: 'left',
                   }}
                 >
-                  <Typography variant="h4" gutterBottom sx={{ mb: 0 }}>{userData.lastName}, {userData.firstName}</Typography>
-                  <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>{userData.address}</Typography>
+                  <Typography variant="h4" gutterBottom sx={{ mb: 0 }}>{userProfile.lastName}, {userProfile.firstName}</Typography>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>{userProfile.address}</Typography>
                 </Box>
               </Grid>
             </>
@@ -350,7 +352,7 @@ export default function App({ userData }:{ userData: any }) {
                   pb: 5,
                 }}
               >  
-                <Profiles userData={userData} />
+                <Profiles userProfile={userProfile} />
               </Box>
             </Grid>
             <Grid item xs={5}>
@@ -381,7 +383,7 @@ export default function App({ userData }:{ userData: any }) {
                 pb: 5,
               }}
             >  
-              <Profiles userData={userData} />
+              <Profiles userProfile={userProfile} />
             </Box>
           </Grid>
         )}
@@ -422,29 +424,43 @@ export async function getStaticProps(context: any) {
   // `getStaticProps` to fetch the user profile data based on the dynamic `profileId` parameter.
   const { params } = context;
 
-  const profile = profilesData.find((profile: { username: string | string[] | undefined; }) => profile.username === params.profileId);  
-
-  return {
-    // The matching profile data is then passed as userData to the App component.
-    props: { userData: profile },
-    // The specifying the revalidation key for Incremental Static Regeneration.
-    revalidate: 10, // seconds
-  };
+  try {
+    //const response = await import(`/api/profiles/${params.profileId}`);
+    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://health-hub-kappa.vercel.app';
+    const response = await fetch(`${baseUrl}/api/profiles/${params.profileId}`, {method: 'GET'});
+    const data = await response.json();
+    
+    return {
+      props: { userData: data },
+      revalidate: 10,
+    };
+  } catch (error) {
+    return {
+      props: { userData: null },
+      revalidate: 10,
+    };
+  }
 };
 
 export async function getStaticPaths() {
   // `getStaticPaths` to generate the static paths for the dynamic routes.
+  try {
+    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://health-hub-kappa.vercel.app';
+    const response = await fetch(`${baseUrl}/api/profiles`);
+    const data = await response.json();
 
-  // creates an array of paths, where each path corresponds to a specific profile by using the username
-  const paths = profilesData.map((userData: { username: any; }) => {
+    const paths = data.map((profile: any) => ({
+      params: { profileId: profile.username },
+    }));
+
     return {
-      params: { profileId: `${userData.username}`}
-    }
-  })
-
-  return {
-    paths: paths,
-    fallback: false,
-    // fallback option is set to false:any path not returned by `getStaticPaths` will result in a 404 page.
-  };
+      paths,
+      fallback: false,
+    };
+  } catch (error) {
+    return {
+      paths: [],
+      fallback: false,
+    };
+  }
 }
