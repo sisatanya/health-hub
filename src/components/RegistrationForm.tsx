@@ -49,7 +49,8 @@ const RegistrationForm = () => {
       };
 
     const makeUsername = async (firstName: string, middleName: string, lastName: string) => {
-        const initialUsername = `${firstName[0]}${middleName ? middleName[0] : ''}${lastName}1`.toLowerCase();
+        const cleanLastName = lastName.replace(/\s/g, '');
+        const initialUsername = `${firstName[0]}${middleName ? middleName[0] : ''}${cleanLastName}1`.toLowerCase();
         let counter = 1;
 
         const cleanUsername = initialUsername.replace(/\d/g, '');
